@@ -33,7 +33,7 @@ class User extends Model {
   @HasMany(() => Ticket, { foreignKey: 'assignedTo', as: 'assignedTickets' })
   public assignedTickets!: Ticket[];
 
-  @BelongsToMany(() => Team, () => TeamUser) // Assuming TeamUser is the join table model
+  @BelongsToMany(() => Team, () => TeamUser) 
   public teams!: Team[];
 }
 

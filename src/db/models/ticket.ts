@@ -2,7 +2,16 @@ import { Table, Column, Model, ForeignKey, DataType, BelongsTo } from 'sequelize
 import User from './user';
 import SLA from './sla';
 
-@Table({ tableName: 'Tickets' }) // Define the table name explicitly
+export enum TicketStatus {
+  OPEN = 'Open',
+  IN_PROGRESS = 'In Progress',
+  RESOLVED = 'Resolved',
+  CLOSED = 'Closed',
+  ON_HOLD = 'On Hold',
+  CANCELLED = 'Cancelled',
+}
+
+@Table({ tableName: 'Tickets' }) 
 class Ticket extends Model {
   @Column({ type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
   public id!: number;
@@ -13,11 +22,11 @@ class Ticket extends Model {
   @Column(DataType.TEXT)
   public description!: string;
 
-  @Column(DataType.STRING)
-  public status!: string;
-
-  @Column(DataType.STRING)
-  public priority!: string;
+  @Column({
+    type: DataType.ENUM(...Object.values(TicketStatus)),
+    allowNull: false,
+  })
+  public status!: TicketStatus;
 
   @ForeignKey(() => User)
   @Column(DataType.INTEGER)
@@ -29,8 +38,8 @@ class Ticket extends Model {
 
   @ForeignKey(() => SLA)
   @Column(DataType.INTEGER)
-  public slaId!: number
-  
+  public slaId!: number;
+
   @Column(DataType.DATE)
   public dueDate!: Date;
 

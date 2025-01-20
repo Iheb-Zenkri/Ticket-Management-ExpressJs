@@ -4,12 +4,6 @@ import TeamUser from './teamuser';
 
 @Table({ tableName: 'Teams' }) 
 class Team extends Model {
-  addUsers(arg0: User[]) {
-    throw new Error('Method not implemented.');
-  }
-  getUsers() {
-    throw new Error('Method not implemented.');
-  }
   @Column({ type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
   public id!: number;
 

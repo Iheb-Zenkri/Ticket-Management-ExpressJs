@@ -8,6 +8,8 @@ import Role from '../models/role';
 import SLA from '../models/sla';
 import Notification from '../models/notification';
 import { Sequelize } from 'sequelize-typescript';
+import Permission from '../models/permission';
+import RolePermission from '../models/rolePermission';
 
 dotenv.config();
 
@@ -18,7 +20,7 @@ const sequelize = new Sequelize({
   host: process.env.DB_HOST,
   dialect: 'mysql', 
   port: Number(process.env.DB_PORT) || 3306,
-  models:[User,Ticket,Team,TeamUser,Role,SLA,Notification],
+  models:[User,Ticket,SLA,Team,TeamUser,Role,Permission,RolePermission,Notification],
 });
 
 sequelize.authenticate()

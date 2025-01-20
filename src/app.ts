@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(morgan('dev')); 
 app.use(rateLimiter);
 
-sequelize.sync({ force: false, alter: true })
+sequelize.sync({ force: false, alter: false })
   .then(() => {
     console.log('Database synced');
   })
