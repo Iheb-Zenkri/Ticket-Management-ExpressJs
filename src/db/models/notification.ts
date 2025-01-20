@@ -1,65 +1,31 @@
-import { Model, DataTypes, Optional, Association } from 'sequelize';
-import sequelize from '../config/dbconfig'; 
-import User from './user'; 
+import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import User from './user';
 import Ticket from './ticket';
 
-interface NotificationAttributes {
-  id: number;
-  message: string;
-  userId: number;
-  ticketId: number;
-  isRead: boolean;
-}
-
-interface NotificationCreationAttributes extends Optional<NotificationAttributes, 'id'> {}
-
-class Notification extends Model<NotificationAttributes, NotificationCreationAttributes> implements NotificationAttributes {
+@Table({ tableName: 'Notifications' })
+class Notification extends Model {
+  @Column({ primaryKey: true, autoIncrement: true, type: DataType.INTEGER })
   public id!: number;
+
+  @Column({ allowNull: false, type: DataType.STRING })
   public message!: string;
+
+  @ForeignKey(() => User)
+  @Column({ allowNull: false, type: DataType.INTEGER })
   public userId!: number;
+
+  @ForeignKey(() => Ticket)
+  @Column({ allowNull: false, type: DataType.INTEGER })
   public ticketId!: number;
+
+  @Column({ allowNull: false, type: DataType.BOOLEAN, defaultValue: false })
   public isRead!: boolean;
 
-  public static associations: {
-    user: Association<Notification, User>;
-    ticket: Association<Notification, Ticket>;
-  };
+  @BelongsTo(() => User)
+  public user!: User;
 
-  static associate(models: any) {
-    Notification.belongsTo(models.User, { foreignKey: 'userId' });
-    Notification.belongsTo(models.Ticket, { foreignKey: 'ticketId' });
-  }
+  @BelongsTo(() => Ticket)
+  public ticket!: Ticket;
 }
-
-Notification.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    message: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    ticketId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    isRead: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    }
-  },
-  {
-    sequelize,
-    modelName: 'Notification',
-    tableName: 'Notifications'
-  }
-);
 
 export default Notification;

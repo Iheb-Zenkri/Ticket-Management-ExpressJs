@@ -1,34 +1,23 @@
-import { Model, DataTypes, Optional } from 'sequelize';
-import sequelize from '../config/dbconfig'; 
-interface TeamUserAttributes {
-  teamId: number;
-  userId: number;
-}
+import { Table, Column, Model, ForeignKey, DataType, BelongsTo } from 'sequelize-typescript';
+import User from './user';
+import Team from './team';
 
-interface TeamUserCreationAttributes extends Optional<TeamUserAttributes, 'teamId' | 'userId'> {}
-
-class TeamUser extends Model<TeamUserAttributes, TeamUserCreationAttributes> implements TeamUserAttributes {
+@Table({ tableName: 'TeamUsers' })
+class TeamUser extends Model {
+  @ForeignKey(() => Team)
+  @Column(DataType.INTEGER)
   public teamId!: number;
-  public userId!: number;
-}
 
-// Initialize the TeamUser model
-TeamUser.init(
-  {
-    teamId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    modelName: 'TeamUser',
-    tableName: 'TeamUsers'
-  }
-);
+  @ForeignKey(() => User)
+  @Column(DataType.INTEGER)
+  public userId!: number;
+
+  // Define associations here
+  @BelongsTo(() => User, { foreignKey: 'userId' })
+  public user!: User;
+
+  @BelongsTo(() => Team, { foreignKey: 'teamId' })
+  public team!: Team;
+}
 
 export default TeamUser;

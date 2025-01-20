@@ -1,48 +1,23 @@
-import { Model, DataTypes, Optional, Association } from 'sequelize';
-import sequelize from '../config/dbconfig'; 
-import User from './user'; 
+import { Table, Column, Model, BelongsToMany, DataType } from 'sequelize-typescript';
+import User from './user';
+import TeamUser from './teamuser';
 
-interface TeamAttributes {
-  id: number;
-  name: string;
-}
-
-interface TeamCreationAttributes extends Optional<TeamAttributes, 'id'> {}
-
-class Team extends Model<TeamAttributes, TeamCreationAttributes> implements TeamAttributes {
+@Table({ tableName: 'Teams' }) 
+class Team extends Model {
+  addUsers(arg0: User[]) {
+    throw new Error('Method not implemented.');
+  }
+  getUsers() {
+    throw new Error('Method not implemented.');
+  }
+  @Column({ type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
   public id!: number;
+
+  @Column(DataType.STRING)
   public name!: string;
 
-  public static associations: {
-    users: Association<Team, User>;
-  };
-
-  // Define associations here
-  static associate(models: any) {
-    Team.belongsToMany(models.User, {
-      through: 'TeamUser',
-      foreignKey: 'teamId',
-      otherKey: 'userId',
-    });
-  }
+  @BelongsToMany(() => User, () => TeamUser)
+  public users!: User[];
 }
-
-Team.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true, 
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    modelName: 'Team',
-  }
-);
 
 export default Team;

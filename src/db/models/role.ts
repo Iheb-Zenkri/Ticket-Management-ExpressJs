@@ -1,17 +1,16 @@
-import { Model, DataTypes } from 'sequelize';
-import sequelize from '../config/db.config.js';
+import { Table, Column, Model, HasMany, DataType } from 'sequelize-typescript';
+import User from './user'; 
 
+@Table({ tableName: 'Roles' }) // Define the table name explicitly
 class Role extends Model {
-    static associate(models) {
-      Role.hasMany(models.User, { foreignKey: 'roleId' });
-    }
-  }
-
-Role.init({
-    name: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'Role',
-});
+  @Column({ type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
+  public id!: number;
   
+  @Column(DataType.STRING)
+  public name!: string;
+
+  @HasMany(() => User, { foreignKey: 'roleId' })
+  public users!: User[];
+}
+
 export default Role;

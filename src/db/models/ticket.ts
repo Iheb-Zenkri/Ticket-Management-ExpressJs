@@ -1,88 +1,48 @@
-import { Model, DataTypes, Optional, Association } from 'sequelize';
-import sequelize from '../config/dbconfig'; 
-import User from './user'; 
-import SLA from './sla'; 
+import { Table, Column, Model, ForeignKey, DataType, BelongsTo } from 'sequelize-typescript';
+import User from './user';
+import SLA from './sla';
 
-// Define the attributes for the Ticket model
-interface TicketAttributes {
-  id: number;
-  title: string;
-  description: string;
-  status: string;
-  priority: string;
-  createdBy: number;
-  assignedTo: number;
-  dueDate: Date;
-}
-
-interface TicketCreationAttributes extends Optional<TicketAttributes, 'id'> {}
-
-class Ticket extends Model<TicketAttributes, TicketCreationAttributes> implements TicketAttributes {
+@Table({ tableName: 'Tickets' }) // Define the table name explicitly
+class Ticket extends Model {
+  @Column({ type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
   public id!: number;
+
+  @Column(DataType.STRING)
   public title!: string;
+
+  @Column(DataType.TEXT)
   public description!: string;
+
+  @Column(DataType.STRING)
   public status!: string;
+
+  @Column(DataType.STRING)
   public priority!: string;
+
+  @ForeignKey(() => User)
+  @Column(DataType.INTEGER)
   public createdBy!: number;
+
+  @ForeignKey(() => User)
+  @Column(DataType.INTEGER)
   public assignedTo!: number;
+
+  @ForeignKey(() => SLA)
+  @Column(DataType.INTEGER)
+  public slaId!: number
+  
+  @Column(DataType.DATE)
   public dueDate!: Date;
 
-  // The `associations` property will be populated by Sequelize
-  public static associations: {
-    creator: Association<Ticket, User>;
-    assignee: Association<Ticket, User>;
-    sla: Association<Ticket, SLA>;
-  };
+  // Associations
+  @BelongsTo(() => User, { foreignKey: 'createdBy', as: 'creator' })
+  public creator!: User;
 
-  // Define associations here
-  static associate(models: any) {
-    Ticket.belongsTo(models.User, { foreignKey: 'createdBy', as: 'creator' });
-    Ticket.belongsTo(models.User, { foreignKey: 'assignedTo', as: 'assignee' });
-    Ticket.belongsTo(models.SLA, { foreignKey: 'slaId' });
-  }
+  @BelongsTo(() => User, { foreignKey: 'assignedTo', as: 'assignee' })
+  public assignee!: User;
+
+  @BelongsTo(() => SLA, { foreignKey: 'slaId' })
+  public sla!: SLA;
 }
-
-// Initialize the Ticket model
-Ticket.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },  
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    status: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    priority: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    createdBy: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    assignedTo: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    dueDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-  },
-  {
-    sequelize,
-    modelName: 'Ticket',
-  }
-);
 
 export default Ticket;
