@@ -1,0 +1,24 @@
+"use strict";
+{
+    "compilerOptions";
+    {
+        "target";
+        "ES6",
+            "module";
+        "ESNext",
+            "moduleResolution";
+        "node",
+            "strict";
+        true,
+            "esModuleInterop";
+        true,
+            "skipLibCheck";
+        true,
+            "forceConsistentCasingInFileNames";
+        true,
+            "outDir";
+        "./dist";
+    }
+    "include";
+    ["src/**/*"];
+}

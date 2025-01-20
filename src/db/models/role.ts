@@ -1,17 +1,17 @@
-'use strict';
-import { Model } from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
+import sequelize from '../config/db.config.js';
 
-export default (sequelize, DataTypes) => {
-  class Role extends Model {
+class Role extends Model {
     static associate(models) {
       Role.hasMany(models.User, { foreignKey: 'roleId' });
     }
   }
-  Role.init({
+
+Role.init({
     name: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Role',
-  });
-  return Role;
-};
+});
+  
+export default Role;
