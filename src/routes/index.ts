@@ -5,6 +5,7 @@ import roleRoutes from './roleRoutes';
 import permissionRoutes from './permissionRoutes';
 import ticketRouter from './ticketRoutes';
 import slaRouter from './slaRoutes' ;
+import notificationRouter from './notificationRoutes' ;
 
 const router : Router = express.Router();
 
@@ -14,5 +15,6 @@ router.use('/sla',slaRouter);
 router.use('/teams',teamRoutes);
 router.use('/roles',roleRoutes);
 router.use('/permissions',permissionRoutes);
+router.use('/notifications',notificationRouter);
 
 export default router;
