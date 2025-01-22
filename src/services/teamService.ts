@@ -1,5 +1,5 @@
 import { CreateTeamDTO, UpdateTeamDTO, TeamWithAssociations } from '../interfaces/teamInterface';
-import db from '../db/models/index';  // Instance of db, including Team and User models
+import db from '../db/models/index'; 
 
 export class TeamService {
   // Create a new team

@@ -17,7 +17,7 @@ export class TeamController {
   // Get all teams with optional user associations
   static async getAllTeams(req: any, res: Response): Promise<void> {
     try {
-      const includeUsers = req.query.includeUsers === 'true';  // Check query param for users inclusion
+      const includeUsers = req.query.includeUsers === 'true';
       const teams = await TeamService.getAllTeams(includeUsers);
       res.status(200).json({ teams });
     } catch (error) {
