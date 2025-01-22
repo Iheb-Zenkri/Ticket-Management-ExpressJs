@@ -20,7 +20,15 @@ const sequelize = new Sequelize({
   host: process.env.DB_HOST,
   dialect: 'mysql', 
   port: Number(process.env.DB_PORT) || 3306,
-  models:[User,Ticket,SLA,Team,TeamUser,Role,Permission,RolePermission,Notification],
+  models:[User,
+    Ticket,
+    SLA,
+    Team,
+    TeamUser,
+    Role,
+    Permission,
+    RolePermission,
+    Notification],
 });
 
 sequelize.authenticate()

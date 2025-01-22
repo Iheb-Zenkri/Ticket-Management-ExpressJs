@@ -15,10 +15,10 @@ class RolePermission extends Model {
   @Column({ type: DataType.INTEGER, allowNull: false })
   public permissionId!: number;
 
-  @BelongsTo(() => Role)
+  @BelongsTo(() => Role, { foreignKey: 'roleId' })
   public role!: Role;
 
-  @BelongsTo(() => Permission)
+  @BelongsTo(() => Permission, { foreignKey: 'permissionId' })
   public permission!: Permission;
 }
 
