@@ -6,9 +6,9 @@ import { PermissionController } from '../controllers/permissionController';
 
 const router: Router = Router();
 
-router.post('/permissions', authenticateToken, checkPermission('MANAGE_PERMISSIONS'), PermissionController.createPermission);
-router.get('/permissions', authenticateToken, checkPermission('MANAGE_PERMISSIONS'), PermissionController.getPermissions);
-router.put('/permissions/:id', authenticateToken, checkPermission('MANAGE_PERMISSIONS'), PermissionController.updatePermission);
-router.delete('/permissions/:id', authenticateToken, checkPermission('MANAGE_PERMISSIONS'), PermissionController.deletePermission);
+router.post('/', authenticateToken, checkPermission('MANAGE_PERMISSIONS'), PermissionController.createPermission);
+router.get('/', authenticateToken, checkPermission('MANAGE_PERMISSIONS'), PermissionController.getPermissions);
+router.put('/:id', authenticateToken, checkPermission('MANAGE_PERMISSIONS'), PermissionController.updatePermission);
+router.delete('/:id', authenticateToken, checkPermission('MANAGE_PERMISSIONS'), PermissionController.deletePermission);
 
 export default router;
