@@ -15,6 +15,11 @@ export interface UpdateUserDTO {
   roleId?: number;
 }
 
+export interface UserDTO {
+  name?: string;
+  email?: string;
+  role: string;
+}
 export interface UserWithAssociations {
   id: number;
   name: string;

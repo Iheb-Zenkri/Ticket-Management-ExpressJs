@@ -59,7 +59,9 @@ export class TeamService {
     if (!team) {
       throw new Error('Team not found');
     }
-    const user = await db.User.findByPk(userId);
+    const user = await db.User.findByPk(userId,{
+      attributes: { exclude: ['password'] },
+    });
     if (!user) {
       throw new Error('User not found');
     }
@@ -72,7 +74,9 @@ export class TeamService {
     if (!team) {
       throw new Error('Team not found');
     }
-    const user = await db.User.findByPk(userId);
+    const user = await db.User.findByPk(userId,{
+      attributes: { exclude: ['password'] },
+    });
     if (!user) {
       throw new Error('User not found');
     }

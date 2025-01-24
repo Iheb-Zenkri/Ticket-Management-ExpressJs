@@ -66,7 +66,8 @@ export class UserController {
       const expiresIn = req.body.rememberMe ? '30d' : '1h';
       const userId = user!.id ;
       const token = generateToken({ payload: { userId }, expiresIn });
-      res.json({ token });
+      const username = user?.name ;
+      res.json({ userId,username,email,token });
     } catch (error) {
       res.status(401).json({ message: error });
     }

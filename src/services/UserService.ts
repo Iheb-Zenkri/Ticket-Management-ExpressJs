@@ -1,4 +1,4 @@
-import { CreateUserDTO, UpdateUserDTO, UserWithAssociations } from '../interfaces/UserInterface';
+import { CreateUserDTO, UpdateUserDTO, UserDTO, UserWithAssociations } from '../interfaces/UserInterface';
 import bcrypt from 'bcryptjs';
 import db from "../db/models/index"
 import User from '../db/models/user';
@@ -12,8 +12,10 @@ export class UserService {
   }
 
 // Update user details
-  static async updateUser(userId: number, data: UpdateUserDTO): Promise<User | null> {
-    const user = await db.User.findByPk(userId);
+  static async updateUser(userId: number, data: UpdateUserDTO): Promise<UserDTO | null> {
+    const user = await db.User.findByPk(userId,{
+      attributes: { exclude: ['password'] },
+    });
     if (!user) {
       throw new Error('User not found');
     }
@@ -21,12 +23,19 @@ export class UserService {
       data.password = await bcrypt.hash(data.password, 10);
     }
     await user.update(data);
-    return user;
+    
+    const role = await db.Role.findByPk(user.roleId);
+    return {
+      name: user.name,
+      email: user.email,
+      role: role.name,
+    };
   }
 
 // Get user with associations
   static async getUserWithAssociations(userId: number): Promise<UserWithAssociations | null> {
     const user = await db.User.findByPk(userId, {
+      attributes: { exclude: ['password'] },
       include: [{ model: db.Role }, { model: db.Team }],
     });
 
@@ -36,14 +45,16 @@ export class UserService {
       id: user.id,
       name: user.name,
       email: user.email,
-      role: user.role,
+      role: user.role.name,
       teams: user.teams,
     };
   }
 
 // Delete a user
   static async deleteUser(userId: number): Promise<void> {
-    const user = await db.User.findByPk(userId);
+    const user = await db.User.findByPk(userId,{
+      attributes: { exclude: ['password'] },
+    });
     if (!user) {
       throw new Error('User not found');
     }
@@ -51,8 +62,10 @@ export class UserService {
   }
 
 // Assign role to user
-  static async assignRole(userId: number, roleId: number): Promise<User | null> {
-    const user = await db.User.findByPk(userId);
+  static async assignRole(userId: number, roleId: number): Promise<UserDTO | null> {
+    const user = await db.User.findByPk(userId,{
+      attributes: { exclude: ['password'] },
+    });
     if (!user) {
       throw new Error('User not found');
     }
@@ -62,12 +75,18 @@ export class UserService {
     }
     user.roleId = roleId;
     await user.save();
-    return user;
+    return {
+      name: user.name,
+      email: user.email,
+      role: role.name,
+    };
   }
 
 // Add user to team
-  static async addToTeam(userId: number, teamId: number): Promise<User | null> {
-    const user = await db.User.findByPk(userId);
+  static async addToTeam(userId: number, teamId: number): Promise<UserDTO | null> {
+    const user = await db.User.findByPk(userId,{
+      attributes: { exclude: ['password'] },
+    });
     if (!user) {
       throw new Error('User not found');
     }
@@ -76,7 +95,13 @@ export class UserService {
       throw new Error('Team not found');
     }
     await user.$add('teams', teamId);
-    return user;
+    
+    const role = await db.Role.findByPk(user.roleId);
+    return {
+      name: user.name,
+      email: user.email,
+      role: role.name,
+    };
   }
 
 // Simple authentication method (login)

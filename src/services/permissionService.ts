@@ -42,6 +42,7 @@ export class PermissionService {
     static async userHasPermission(userId: number, permissionName: string, modelId?: number): Promise<boolean> {
       try {
       const user = await db.User.findByPk(userId, {
+        attributes: { exclude: ['password'] },
         include: [
           {
             model: db.Role,
@@ -84,7 +85,7 @@ export class PermissionService {
     if (modelId && hasPermission) {
         return true;
     }
-
+    
     return hasPermission;
     } catch (error) {
       throw new Error(`Permission check failed: ${error}`);
