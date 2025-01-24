@@ -72,7 +72,6 @@ export class PermissionService {
     if (!role) {
       throw new Error('Role not found');
     }
-    console.log(role);
 
     const permissions = role.rolePermissions.map((rolePermission : any) => rolePermission.permission);
 

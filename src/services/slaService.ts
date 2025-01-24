@@ -4,8 +4,8 @@ import { Op } from 'sequelize';
 
 interface SLAData {
   priority: Priority;
-  timeToRespond: number;
-  timeToResolve: number;
+  timeToRespond: Date;
+  timeToResolve: Date;
 }
 
 export class SLAService {
@@ -22,10 +22,14 @@ export class SLAService {
       whereClause.priority = filter.priority;
     }
     if (filter?.timeToRespond) {
-      whereClause.timeToRespond = { [Op.lte]: filter.timeToRespond };
+      const endOfDay = new Date(filter.timeToRespond);
+      endOfDay.setUTCHours(23, 59, 59, 999);
+      whereClause.timeToRespond = { [Op.lte]: endOfDay };  
     }
     if (filter?.timeToResolve) {
-      whereClause.timeToResolve = { [Op.lte]: filter.timeToResolve };
+      const endOfDay = new Date(filter.timeToResolve);
+      endOfDay.setUTCHours(23, 59, 59, 999);
+      whereClause.timeToResolve = { [Op.lte]: endOfDay };
     }
 
     return await db.SLA.findAll({ where: whereClause });

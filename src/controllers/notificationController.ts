@@ -34,6 +34,7 @@ export class NotificationController {
       const notification = await NotificationService.getNotificationById(notificationId);
       if (!notification) {
         res.status(404).json({ message: 'Notification not found' });
+        return ;
       }
         res.status(200).json(notification);
     } catch (error) {
@@ -69,7 +70,7 @@ export class NotificationController {
     try {
       const notificationId = parseInt(req.params.id);
       await NotificationService.deleteNotification(notificationId);
-      res.status(204).send();
+      res.status(204).send("Notification deleted succufully");
     } catch (error) {
         if(error instanceof Error)
             res.status(500).json({ error: error.message });

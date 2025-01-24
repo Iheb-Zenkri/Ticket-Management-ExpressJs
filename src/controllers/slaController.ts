@@ -19,10 +19,10 @@ export class SLAController {
     try {
       const filter = req.query as { priority?: string; timeToRespond?: string; timeToResolve?: string };
       const slas = await SLAService.getSLAs({
-        priority: filter.priority as any,  // Type casting as needed
-        timeToRespond: filter.timeToRespond ? parseInt(filter.timeToRespond) : undefined,
-        timeToResolve: filter.timeToResolve ? parseInt(filter.timeToResolve) : undefined,
-      });
+        priority: filter.priority as any, // Type casting as needed
+        timeToRespond: filter.timeToRespond ? new Date(filter.timeToRespond) : undefined,
+        timeToResolve: filter.timeToResolve ? new Date(filter.timeToResolve) : undefined,
+      });      
       res.status(200).json(slas);
     } catch (error) {
         if(error instanceof Error)

@@ -19,10 +19,10 @@ class SLA extends Model {
   })
   public priority!: Priority;
 
-  @Column({ allowNull: false, type: DataType.INTEGER })
+  @Column({ allowNull: false, type: DataType.DATE })
   public timeToRespond!: number;
 
-  @Column({ allowNull: false, type: DataType.INTEGER })
+  @Column({ allowNull: false, type: DataType.DATE })
   public timeToResolve!: number;
 
   @HasMany(() => Ticket, { foreignKey: 'slaId' })

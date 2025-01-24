@@ -1,3 +1,6 @@
+import { Priority } from "../db/models/sla";
+import { TicketStatus } from "../db/models/ticket";
+
 export interface TicketData {
     title: string;
     description: string;
@@ -14,6 +17,11 @@ export interface TicketData {
     assignedTo?: number;
     slaId?: number;
     dueDate?: Date;
+    slaFilters?: {
+      priority: Priority;
+      timeToRespond: Date;
+      timeToResolve: Date;
+    }
   }
   
   export interface TicketUpdateData {

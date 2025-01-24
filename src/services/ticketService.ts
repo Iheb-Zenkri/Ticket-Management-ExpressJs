@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import db from '../db/models/index';
 import Ticket, { TicketStatus } from '../db/models/ticket';
 import { TicketData, TicketFilters, TicketUpdateData } from '../interfaces/ticketInterface';
@@ -16,16 +17,30 @@ export class TicketService {
     if (filters?.assignedTo) whereClause.assignedTo = filters.assignedTo;
     if (filters?.slaId) whereClause.slaId = filters.slaId;
     if (filters?.dueDate) whereClause.dueDate = filters.dueDate;
-
+  
+    const slaWhereClause: any = {};
+    if (filters?.slaFilters?.priority) slaWhereClause.priority = filters.slaFilters.priority;
+    if (filters?.slaFilters?.timeToRespond){
+      const endOfDay = new Date(filters.slaFilters.timeToRespond );
+      endOfDay.setUTCHours(23, 59, 59, 999);
+       slaWhereClause.timeToRespond = { [Op.lte]: endOfDay};
+      }
+    if (filters?.slaFilters?.timeToResolve){
+      const endOfDay = new Date(filters.slaFilters.timeToResolve);
+      endOfDay.setUTCHours(23, 59, 59, 999);
+      slaWhereClause.timeToResolve = { [Op.lte]: endOfDay };
+    }
+  
     return db.Ticket.findAll({
       where: whereClause,
       include: [
         { model: db.User, as: 'creator' },
         { model: db.User, as: 'assignee' },
-        { model: db.SLA },
+        { model: db.SLA, where: slaWhereClause },
       ],
     });
   }
+  
 
   // Get a single ticket by ID
   static async getTicketById(ticketId: number): Promise<Ticket | null> {
